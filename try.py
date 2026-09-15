@@ -1,8 +1,10 @@
-# app.py — Bài 1: Hello API
-from flask import Flask
-app = Flask(__name__)
-@app.route("/")
-def index():
-    return {"message": "Hello, API!"}
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+next_id = 1  # Biến toàn cục (Global)
+
+def create_student():
+    # Không có dòng "global next_id"
+    global next_id
+    next_id += 1  # DÒNG NÀY GÂY SẬP SERVER
+    return next_id
+
+create_student()
+print(next_id)
