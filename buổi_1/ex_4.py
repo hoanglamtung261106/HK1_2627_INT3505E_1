@@ -15,7 +15,7 @@ BOOKS = [
     }
 ]
 
-#Duyệt mảng tìm sinh viên theo ID, trả về dict hoặc None
+#Duyệt mảng tìm book theo ID, trả về dict hoặc None
 def find_by_id(book_id: str):
     for book in BOOKS:
         if book.get("id") == book_id:
