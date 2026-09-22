@@ -35,8 +35,13 @@ def patch(book_id):
     i = next((k for k,b in enumerate(BOOKS) if b["id"]==book_id), None)
     if i is None: return jsonify(error="not found"), 404
     p = request.get_json(silent=True) or {}
-    if p.get("price", 0) < 0:
-        return jsonify(error="price must be positive"), 422
+
+    if "price" in p:
+        try:
+            if float(p["price"]) < 0:
+                return jsonify(error="price must be positive"), 422
+        except (ValueError, TypeError):
+            return jsonify(error="price must be a valid number"), 422
     
     for k in " title author isbn price".split():
         if k in p: BOOKS[i][k] = p[k]
@@ -45,10 +50,11 @@ def patch(book_id):
 # ─── DELETE ─── idempotent, trả 204
 @app.delete("/books/<int:book_id>")
 def delete(book_id):
-    i = next((k for k,b in enumerate(BOOKS)
-    if b["id"]==book_id), None)
-    if i is None: return jsonify(error="not found"), 404
-    BOOKS.pop(i); return"", 204
+    i = next((k for k,b in enumerate(BOOKS) if b["id"]==book_id), None)
+    if i is None: 
+        return jsonify(error="not found"), 404
+    BOOKS.pop(i); 
+    return "", 204
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
