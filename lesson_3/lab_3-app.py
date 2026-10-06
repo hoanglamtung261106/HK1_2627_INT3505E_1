@@ -3,6 +3,8 @@ import json
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+app.json.ensure_ascii = False
+
 
 # Giả lập Database gồm 10 đơn hàng
 ORDERS_DB = [
