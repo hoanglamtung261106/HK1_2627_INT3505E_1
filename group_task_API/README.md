@@ -30,19 +30,19 @@
 ### Minh hoạ
 **Auth**
 
-![Auth - đăng nhập](docs/images/image-3.png)
+![Auth - đăng nhập](image-3.png)
 
 **Books**
 
-![Books - danh sách sách](docs/images/image.png)
+![Books - danh sách sách](image.png)
 
 **Authors**
 
-![Authors - danh sách tác giả](docs/images/image-1.png)
+![Authors - danh sách tác giả](image-1.png)
 
 **Borrows**
 
-![Borrows - phiếu mượn](docs/images/image-2.png)
+![Borrows - phiếu mượn](image-2.png)
 
 **Điểm kỹ thuật nổi bật**
 
