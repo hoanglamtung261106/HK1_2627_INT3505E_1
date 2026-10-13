@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - Compact
+  version: 1.0.0
+  description: API quản lý cửa hàng thú cưng tinh gọn, chuẩn hóa 5 endpoints CRUD.
+servers:
+  - url: http://localhost:5000/v1
+    description: Local Dev Server
+
+security:
+  - apiKeyAuth: []
+
+tags:
+  - name: pets
+    description: Quản lý thông tin thú cưng
+
+paths:
+  /pets:
+    get:
+      tags: [pets]
+      summary: Lấy danh sách thú cưng
+      operationId: listPets
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Giới hạn số lượng trả về
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 10
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        'default':
+          $ref: '#/components/responses/GeneralError'
+
+    post:
+      tags: [pets]
+      summary: Thêm thú cưng mới
+      operationId: createPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
+      responses:
+        '201':
+          description: Tạo thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          $ref: '#/components/responses/GeneralError'
+        'default':
+          $ref: '#/components/responses/GeneralError'
+
+  /pets/{petId}:
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        description: ID của thú cưng
+        schema:
+          type: integer
+          format: int64
+          example: 1
+
+    get:
+      tags: [pets]
+      summary: Xem chi tiết thú cưng theo ID
+      operationId: getPetById
+      responses:
+        '200':
+          description: Chi tiết thú cưng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          $ref: '#/components/responses/GeneralError'
+        'default':
+          $ref: '#/components/responses/GeneralError'
+
+    patch:
+      tags: [pets]
+      summary: Cập nhật một phần thông tin thú cưng
+      operationId: updatePet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetUpdateInput'
+      responses:
+        '200':
+          description: Cập nhật thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          $ref: '#/components/responses/GeneralError'
+        'default':
+          $ref: '#/components/responses/GeneralError'
+
+    delete:
+      tags: [pets]
+      summary: Xóa một thú cưng
+      operationId: deletePet
+      responses:
+        '204':
+          description: Xóa thành công (không trả về body)
+        '404':
+          $ref: '#/components/responses/GeneralError'
+        'default':
+          $ref: '#/components/responses/GeneralError'
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "Doggie"
+        tag:
+          type: string
+          example: "dog"
+        status:
+          type: string
+          enum: [available, pending, sold]
+          example: "available"
+
+    PetInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Doggie"
+        tag:
+          type: string
+          example: "dog"
+        status:
+          type: string
+          enum: [available, pending, sold]
+          example: "available"
+
+    PetUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Max"
+        tag:
+          type: string
+          example: "dog"
+        status:
+          type: string
+          enum: [available, pending, sold]
+          example: "sold"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Pet not found"
+
+  responses:
+    GeneralError:
+      description: Phản hồi lỗi
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
