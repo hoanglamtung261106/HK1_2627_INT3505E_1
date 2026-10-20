@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Question",
+    "description": "API Representation cho câu hỏi trắc nghiệm",
+    "type": "object",
+    "required": [
+        "id",
+        "quizId",
+        "content",
+        "points",
+        "options",
+        "correctOptionId"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^qst_[a-z0-9]+$"
+        },
+        "quizId": {
+            "type": "string",
+            "pattern": "^quiz_[a-z0-9]+$"
+        },
+        "content": {
+            "type": "string",
+            "minLength": 1
+        },
+        "points": {
+            "type": "number",
+            "minimum": 0.25
+        },
+        "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "items": {
+                "$ref": "#/$defs/option"
+            }
+        },
+        "correctOptionId": {
+            "type": "string",
+            "pattern": "^opt_[a-z0-9]+$"
+        }
+    },
+    "$defs": {
+        "option": {
+            "type": "object",
+            "required": [
+                "id",
+                "label",
+                "content"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^opt_[a-z0-9]+$"
+                },
+                "label": {
+                    "type": "string",
+                    "enum": [
+                        "A",
+                        "B",
+                        "C",
+                        "D",
+                        "E",
+                        "F"
+                    ]
+                },
+                "content": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

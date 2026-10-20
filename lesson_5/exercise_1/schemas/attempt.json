@@ -1,0 +1,81 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Attempt",
+    "description": "API Representation cho kết quả lượt làm bài thi",
+    "type": "object",
+    "required": [
+        "id",
+        "quizId",
+        "userId",
+        "status",
+        "startedAt",
+        "answers"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^att_[a-z0-9]+$"
+        },
+        "quizId": {
+            "type": "string",
+            "pattern": "^quiz_[a-z0-9]+$"
+        },
+        "userId": {
+            "type": "string",
+            "pattern": "^usr_[a-z0-9]+$"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "in_progress",
+                "completed",
+                "abandoned"
+            ]
+        },
+        "score": {
+            "type": [
+                "number",
+                "null"
+            ],
+            "minimum": 0
+        },
+        "startedAt": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "submittedAt": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time"
+        },
+        "answers": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/submittedAnswer"
+            }
+        }
+    },
+    "$defs": {
+        "submittedAnswer": {
+            "type": "object",
+            "required": [
+                "questionId",
+                "selectedOptionId"
+            ],
+            "properties": {
+                "questionId": {
+                    "type": "string",
+                    "pattern": "^qst_[a-z0-9]+$"
+                },
+                "selectedOptionId": {
+                    "type": "string",
+                    "pattern": "^opt_[a-z0-9]+$"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
