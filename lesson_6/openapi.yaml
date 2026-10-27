@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Social Network Auth & Post API
+  version: 1.0.0
+  description: API xác thực và xem bài viết phục vụ bài tập SOA Buổi 06.
+paths:
+  /auth/login:
+    post:
+      summary: Đăng nhập hệ thống
+      description: Xác thực người dùng và cấp cặp access/refresh token.
+      security: [] # Public endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: an@vnu.edu.vn
+                password:
+                  type: string
+                  format: password
+                  example: P@ssw0rd123!
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: Bearer
+        '400':
+          description: Dữ liệu gửi lên không hợp lệ
+        '401':
+          description: Thông tin đăng nhập không chính xác (invalid_credentials)
+        '429':
+          description: Quá nhiều yêu cầu đăng nhập thất bại (Rate limit)
+
+  /auth/refresh:
+    post:
+      summary: Cấp mới Access Token
+      description: Đổi refresh token lấy access token mới mà không cần re-login.
+      security:
+        - RefreshAuth: []
+      responses:
+        '200':
+          description: Cấp access token mới thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '401':
+          description: Refresh token hết hạn, không hợp lệ hoặc đã bị thu hồi
+        '403':
+          description: Token không đúng loại hoặc không có quyền refresh
+
+  /posts/{id}:
+    get:
+      summary: Lấy nội dung bài viết
+      description: Yêu cầu xác thực, kiểm tra scope posts:read và chính sách truy cập bài viết.
+      security:
+        - BearerAuth:
+            - posts:read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID bài viết cần xem
+      responses:
+        '200':
+          description: Lấy bài viết thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  author_id:
+                    type: integer
+        '401':
+          description: Chưa xác thực hoặc Access Token không hợp lệ
+        '403':
+          description: Thiếu scope posts:read hoặc không có quyền xem bài viết riêng tư
+        '404':
+          description: Bài viết không tồn tại
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access Token JWT truyền qua header Authorization: Bearer <token>
+    RefreshAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Refresh Token JWT dùng để cấp lại Access Token
