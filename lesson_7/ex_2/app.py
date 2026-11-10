@@ -16,12 +16,18 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     qty_in_stock = db.Column(db.Integer, default=10)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 class Order(db.Model):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(20), default="pending")
     # 1 Order có nhiều OrderItem (tránh gán 1 Product duy nhất cho Order)
     items = db.relationship("OrderItem", backref="order", cascade="all, delete-orphan")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 class OrderItem(db.Model):
     __tablename__ = "order_items"
@@ -32,6 +38,9 @@ class OrderItem(db.Model):
     unit_price = db.Column(db.Float, nullable=False)
 
     product = db.relationship("Product")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 # ==============================================================================
 # 2. BLUEPRINT RIÊNG: /api/v1/orders
@@ -69,7 +78,8 @@ def create_order():
     if not items_data:
         return jsonify({"error": "Đơn hàng phải có ít nhất 1 sản phẩm"}), 400
 
-    order = Order(status="pending")
+    order = Order()
+    order.status = "pending"
     db.session.add(order)
 
     for item in items_data:
