@@ -1,4 +1,12 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe"
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/lesson_8_lab_01/lab08-starter",
+        "./lesson_8_lab_01/lab08-starter"
+    ],
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/lesson_8_lab_01/lab08-starter",
+        "./lesson_8_lab_01/lab08-starter"
+    ]
 }
 
