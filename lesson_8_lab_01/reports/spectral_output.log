@@ -1,0 +1,36 @@
+================================================================================
+SPECTRAL LINT OUTPUT LOG — LAB 02 (OpenAPI & Spectral)
+================================================================================
+
+1. COMMAND EXECUTED:
+$ spectral lint openapi.yaml --ruleset .spectral.yml
+
+--------------------------------------------------------------------------------
+2. BEFORE FIX (Detecting 3 intentional defects):
+--------------------------------------------------------------------------------
+openapi.yaml
+ 24:9    warning  operation-operationId           Operation should have an operationId.                      paths./books.get
+ 95:13     error  no-204-body                     HTTP 204 responses must not have a content property.       paths./books/{id}.delete.responses.204.content
+110:15     error  book-year-integer               Book.year type must be integer.                            components.schemas.Book.properties.year.type
+
+✖ 3 problems (2 errors, 1 warning, 0 infos, 0 hints)
+
+--------------------------------------------------------------------------------
+3. FIXES APPLIED TO openapi.yaml:
+--------------------------------------------------------------------------------
+- Issue 1: Added `operationId: listBooks` to `GET /books`.
+- Issue 2: Removed `content: application/json` body from `DELETE /books/{id}` 204 response.
+- Issue 3: Changed `Book.year` schema from `type: string` to `type: integer, nullable: true`.
+- Custom Rule added to .spectral.yml: `response-200-has-schema-fields` ensuring 200 response defines schema fields.
+
+--------------------------------------------------------------------------------
+4. AFTER FIX (0 problems):
+--------------------------------------------------------------------------------
+$ spectral lint openapi.yaml --ruleset .spectral.yml
+
+openapi.yaml
+No results with a severity of 'error' found!
+
+================================================================================
+STATUS: 0 problems (PASSED)
+================================================================================

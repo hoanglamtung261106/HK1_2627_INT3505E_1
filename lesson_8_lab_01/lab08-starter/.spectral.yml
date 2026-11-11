@@ -38,3 +38,4 @@ rules:
             - required: ["properties"]
             - required: ["items"]
             - required: ["$ref"]
+
