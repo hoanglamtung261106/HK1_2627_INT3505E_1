@@ -1,0 +1,40 @@
+extends: ["spectral:oas"]
+
+rules:
+  # Rule kiểm tra Lỗi 2: Response 204 không được chứa body (content)
+  no-204-body:
+    description: Responses with HTTP status 204 must not define a content body.
+    message: "HTTP 204 responses must not have a content property."
+    given: "$.paths..responses['204']"
+    severity: error
+    then:
+      field: content
+      function: falsy
+
+  # Rule kiểm tra Lỗi 3: Book.year phải có kiểu integer
+  book-year-integer:
+    description: Book.year must be an integer, not string.
+    message: "Book.year type must be integer."
+    given: "$.components.schemas.Book.properties.year"
+    severity: error
+    then:
+      field: type
+      function: pattern
+      functionOptions:
+        match: "^integer$"
+
+  # Custom rule: Response 200 phải có schema hợp lệ và định nghĩa các trường (properties, items hoặc ref)
+  response-200-has-schema-fields:
+    description: Response 200 must define fields in its schema (properties, items, or $ref).
+    message: "HTTP 200 response schema must define properties or items (cannot be empty)."
+    given: "$.paths..responses['200'].content['application/json'].schema"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          anyOf:
+            - required: ["properties"]
+            - required: ["items"]
+            - required: ["$ref"]
