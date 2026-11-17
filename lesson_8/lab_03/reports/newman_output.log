@@ -1,0 +1,62 @@
+$ newman run books-api.postman_collection.json -e local.postman_environment.json -r cli,junit --reporter-junit-export reports/junit.xml
+
+newman
+
+Books API — Lab08 Lab 3 Collection
+
+□ books
+└ GET /books — initial list
+  GET http://127.0.0.1:5000/books [200 OK, 167B, 140ms]
+  √  200 OK
+  √  body is array
+
+└ POST /books — create
+  POST http://127.0.0.1:5000/books [201 CREATED, 259B, 38ms]
+  √  201 Created
+  √  positive id
+
+└ GET /books/{id} — read
+  GET http://127.0.0.1:5000/books/1 [200 OK, 234B, 17ms]
+  √  200 OK
+  √  expected fields
+
+└ PUT /books/{id} — replace
+  PUT http://127.0.0.1:5000/books/1 [200 OK, 242B, 31ms]
+  √  200 OK
+  √  updated title
+
+└ DELETE /books/{id} — delete
+  DELETE http://127.0.0.1:5000/books/1 [204 NO CONTENT, 161B, 20ms]
+  √  204 No Content
+  √  empty body
+
+□ error-cases
+└ POST /books (missing title)
+  POST http://127.0.0.1:5000/books [400 BAD REQUEST, 307B, 7ms]
+  √  400 Bad Request
+  √  error code is VALIDATION_ERROR and errors contain title
+
+└ GET /books/9999 (missing id)
+  GET http://127.0.0.1:5000/books/9999 [404 NOT FOUND, 220B, 70ms]
+  √  404 Not Found
+  √  error code is NOT_FOUND
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 0 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                14 │                0 │
+├─────────────────────────┴───────────────────┼──────────────────┤
+│ total run duration: 930ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 398B (approx)                             │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 46ms [min: 7ms, max: 140ms, s.d.: 42ms] │
+└────────────────────────────────────────────────────────────────┘
