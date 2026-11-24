@@ -1,10 +1,25 @@
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.db
-instance/
+*.egg-info/
 .pytest_cache/
-.DS_Store
-.venv/
-spectral.exe
 
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Database & runtime
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# PDF documents / slides
+*.pdf
+
+# Tools & OS
+.DS_Store
+Thumbs.db
+spectral.exe
